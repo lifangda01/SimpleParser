@@ -23,3 +23,16 @@ Sentence
    CompoundNoun
     Noun : arrow
 ```
+and for "I like time." is
+```
+Start
+ InputText
+  Sentence
+   NounPhrase
+    Pronoun : I
+   VerbPhrase
+    Verb : like
+    NounPhrase
+     CompoundNoun
+      Noun : time
+```
