@@ -10,7 +10,10 @@ insertText = """
 """
 
 oldText = r'return prefix \+ toString\(\)\;'
-newText = r'return prefix + toString() + " : " + lexem;'
+newText = """
+    if (lexem != "") { return prefix + toString() + " : " + lexem; } 
+    else { return prefix + toString(); }
+"""
 
 fileName = "SimpleNode.java"
 
