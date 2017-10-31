@@ -1,0 +1,153 @@
+/* Parser.jjt */
+
+options {
+	IGNORE_CASE=true;
+}
+
+/* *** Specification of the parser class *** */
+
+PARSER_BEGIN(Parser)
+
+public class Parser {}
+
+PARSER_END(Parser)
+
+/* *** Token specification *** */
+
+/* Skip whitespace */
+SKIP : { " " | "\r" | "\n" }
+
+/* Vocabulary */
+TOKEN: {
+	< DETERMINER: "the" | "every" | "this" | "a" | "an" >
+}
+
+TOKEN: {
+	< NOUN: "time" | "arrow" | "flies" | "widget" | "cat" >
+}
+
+TOKEN: {
+	< PRONOUN: "i" | "we" | "this" | "you" | "us" >
+}
+
+TOKEN: {
+	< VERB: "is" | "are" | "have" | "has" | "make" | "time" |
+			"flies" | "build" | "stores" | "buying" | "like" >
+}
+
+TOKEN: {
+	< ADJ: "time" | "big" | "high quality" | "fast" | "large" | 
+			"precise" | "high" >
+}
+
+TOKEN: {
+	< PREPOSITION: "with" | "without" | "for" | "about" | "at" |
+					 "after" | "between" | "but" | "below" | "in" |
+					 "into" | "like" | "except" | "following" | "on" |
+					 "than" | "over" | "near" | "of" | "like" | "near" |
+					 "since" | "up" | "upon" | "within" | "by" >
+}
+
+/* Words */
+TOKEN: {
+	< WORD: (<LETTER>)+ > |
+	< #LETTER: ["a"-"z", "A"-"Z"] >
+}
+
+/* Separator */
+TOKEN: {
+	< PERIOD: "." >
+}
+
+/* *** Context-free grammar (EBNF) *** */
+
+/* The start nonterminal and its productions. */
+
+SimpleNode Start() : {}
+{
+	InputText()
+	{ return jjtThis; }
+}
+
+/* Other nonterminals and their productions */
+
+void InputText() : {}
+{
+	( Sentence() <PERIOD> )+
+}
+
+void Sentence() : {}
+{
+	( NP() )? VP()
+}
+
+void NP() #NounPhrase:
+{}
+{
+	( Pronoun() | ( ( Determiner() )? ( Adjective() )* CN() ) ) ( PP() )?
+}
+
+void CN() #CompoundNoun:
+{}
+{
+	Noun() ( Noun() )?
+}
+
+void PP() #PrepPhrase:
+{}
+{
+	Preposition() NP()
+}
+
+void VP() #VerbPhrase:
+{}
+{
+	// <VERB> NP()
+	// t = Verb() NP()
+	// {jjtThis.setLexem(t.image);}
+	Verb() NP()
+}
+
+/* Decorations */
+
+// void VerbPhrase() #VerbPhrase:
+// {Token t;}
+// {
+// 	t = {jjtThis.setLexem(t.image);}
+// }
+
+void Determiner() #Determiner:
+{Token t;}
+{
+	t = <DETERMINER> {jjtThis.setLexem(t.image);}
+}
+
+void Noun() #Noun:
+{Token t;}
+{
+	t = <NOUN> {jjtThis.setLexem(t.image);}
+}
+
+void Pronoun() #Pronoun:
+{Token t;}
+{
+	t = <PRONOUN> {jjtThis.setLexem(t.image);}
+}
+
+void Verb() #Verb:
+{Token t;}
+{
+	t = <VERB> {jjtThis.setLexem(t.image);}
+}
+
+void Adjective() #Adjective:
+{Token t;}
+{
+	t = <ADJ> {jjtThis.setLexem(t.image);}
+}
+
+void Preposition() #Preposition:
+{Token t;}
+{
+	t = <PREPOSITION> {jjtThis.setLexem(t.image);}
+}
