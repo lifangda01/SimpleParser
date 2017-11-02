@@ -24,14 +24,16 @@ TOKEN: {
 
 TOKEN: {
 	< NOUN: "time" | "arrow" | "flies" | "widget" | "cat" >
+	// < NOUN: "time" | "arrow" | "widget" | "cat" >
 }
 
 TOKEN: {
 	< PRONOUN: "i" | "we" | "this" | "you" | "us" >
 }
-
+// SHould just work without deleting "like" here
 TOKEN: {
 	< VERB: "is" | "are" | "have" | "has" | "make" | "time" |
+			// "flies" | "build" | "stores" | "buying" >
 			"flies" | "build" | "stores" | "buying" | "like" >
 }
 
@@ -84,7 +86,7 @@ void Sentence() : {}
 void NP() #NounPhrase:
 {}
 {
-	( Pronoun() | ( ( Determiner() )? ( Adjective() )* CN() ) ) ( PP() )?
+	( Pronoun() | ( ( Determiner() )? ( Adjective() )* CN() ) ) ( PP() )? 
 }
 
 void CN() #CompoundNoun:
@@ -102,19 +104,10 @@ void PP() #PrepPhrase:
 void VP() #VerbPhrase:
 {}
 {
-	// <VERB> NP()
-	// t = Verb() NP()
-	// {jjtThis.setLexem(t.image);}
-	Verb() NP()
+	Verb() ( Preposition() )? NP()
 }
 
 /* Decorations */
-
-// void VerbPhrase() #VerbPhrase:
-// {Token t;}
-// {
-// 	t = {jjtThis.setLexem(t.image);}
-// }
 
 void Determiner() #Determiner:
 {Token t;}
